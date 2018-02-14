@@ -145,7 +145,7 @@ class alle(wx.Frame):
         self.res_de5=self.t_de5.GetValue()
         if self.res_eng != "" and self.res_de1 != "":
             backend.delrow(self.res_de1,self.res_de2,self.res_de3,self.res_de4,self.res_de5,self.res_eng,chosen)
-        self.onclear()
+        self.c()
     def neu(self,event):
         self.res_eng=self.t_eng.GetValue()
         self.res_de1=self.t_de1.GetValue()
