@@ -104,24 +104,58 @@ class alle(wx.Frame):
         self.t_de3=wx.TextCtrl(self.panel,-1,size=(175, -1),pos=(220,100))
         self.t_de4=wx.TextCtrl(self.panel,-1,size=(175, -1),pos=(220,130))
         self.t_de5=wx.TextCtrl(self.panel,-1,size=(175, -1),pos=(220,160))
-        mylist=[row[1]+'='+row[2]+' '+row[3]+' '+row[4]+' '+row[5]+' '+row[6] for row in backend.all(chosen)]
-        self.box=wx.ListBox(self.panel,-1,(20,80),(190,170),mylist,style=wx.LB_SINGLE|wx.LB_NEEDED_SB|wx.LB_SORT|wx.LB_HSCROLL)
+        self.box=wx.ListBox(self.panel,-1,(20,80),(190,170),[],style=wx.LB_SINGLE|wx.LB_NEEDED_SB|wx.LB_SORT|wx.LB_HSCROLL)
         self.Bind(wx.EVT_LISTBOX, self.onListBox, self.box)
+        self.c()
     def c(self,*event):
         self.box.Clear()
-        mylist=[row[1]+'='+row[2]+' '+row[3]+' '+row[4]+' '+row[5]+' '+row[6] for row in backend.all(chosen)]
-        self.box=wx.ListBox(self.panel,-1,(20,80),(190,170),mylist,style=wx.LB_SINGLE|wx.LB_NEEDED_SB|wx.LB_SORT|wx.LB_HSCROLL)
+        for row in backend.all(chosen):
+            l=[]
+            a=''
+            for i in [row[2],row[3],row[4],row[5],row[6],row[1]]:
+                if i != '':
+                    l.append(i)
+            if (len(l)-2)>0:
+                for i in range(len(l)-2):
+                    a=a+l[i]+'|'
+            a=a+l[-2]
+            a=l[-1]+'='+a
+            self.box.Append(a)
         self.Bind(wx.EVT_LISTBOX, self.onListBox, self.box)
     def s2(self,event):
         self.box.Clear()
-        mylist=[row[1]+'='+row[2]+' '+row[3]+' '+row[4]+' '+row[5]+' '+row[6] for row in backend.s2(self.t_de1.GetValue(),chosen)]
+        mylist = []
+        for row in backend.s2(self.t_de1.GetValue(),chosen):
+            l=[]
+            a=''
+            for i in [row[2],row[3],row[4],row[5],row[6],row[1]]:
+                if i != '':
+                    l.append(i)
+            if (len(l)-2)>0:
+                for i in range(len(l)-2):
+                    a=a+l[i]+'|'
+            a=a+l[-2]
+            a=l[-1]+'='+a
+            mylist.append(a)
         if mylist == []:
             mylist = ["Keine Ergebnisse."]
         self.box=wx.ListBox(self.panel,-1,(20,80),(190,170),mylist,style=wx.LB_SINGLE|wx.LB_NEEDED_SB|wx.LB_SORT|wx.LB_HSCROLL)
         self.Bind(wx.EVT_LISTBOX, self.onListBox, self.box)
     def s1(self,event):
         self.box.Clear()
-        mylist=[row[1]+'='+row[2]+' '+row[3]+' '+row[4]+' '+row[5]+' '+row[6] for row in backend.s1(self.t_eng.GetValue(),chosen)]
+        mylist = []
+        for row in backend.s1(self.t_eng.GetValue(),chosen):
+            l=[]
+            a=''
+            for i in [row[2],row[3],row[4],row[5],row[6],row[1]]:
+                if i != '':
+                    l.append(i)
+            if (len(l)-2)>0:
+                for i in range(len(l)-2):
+                    a=a+l[i]+'|'
+            a=a+l[-2]
+            a=l[-1]+'='+a
+            mylist.append(a)
         if mylist == []:
             mylist = ["Keine Ergebnisse."]
         self.box=wx.ListBox(self.panel,-1,(20,80),(190,170),mylist,style=wx.LB_SINGLE|wx.LB_NEEDED_SB|wx.LB_SORT|wx.LB_HSCROLL)
@@ -135,7 +169,7 @@ class alle(wx.Frame):
         self.res_de5=self.t_de5.GetValue()
         if self.res_eng != "" and self.res_de1 != "":
             backend.up_row(self.res_eng,self.res_de1,self.res_de2,self.res_de3,self.res_de4,self.res_de5,chosen)
-        self.onclear()
+        self.c()
     def delrow(self,event):
         self.res_eng=self.t_eng.GetValue()
         self.res_de1=self.t_de1.GetValue()
@@ -157,7 +191,7 @@ class alle(wx.Frame):
             backend.neu(self.res_de1,self.res_de2,self.res_de3,self.res_de4,self.res_de5,self.res_eng,chosen)
         self.c()
     def onListBox(self, event):
-        a = event.GetEventObject().GetStringSelection().replace('=',' ').split()
+        a = event.GetEventObject().GetStringSelection().replace('=','|').split('|')
         d2 = a[2] if len(a)>=3 else ''
         d3 = a[3] if len(a)>=4 else ''
         d4 = a[4] if len(a)>=5 else ''
@@ -191,7 +225,15 @@ class alle_win(wx.Frame):
                 self.li.append([row[1],row[2],row[3],row[4],row[5],row[6]])
         if self.li != []:
             self.l1.SetLabel(self.li[0][0])
-            self.l2.SetLabel(self.li[0][1]+' '+self.li[0][2]+' '+self.li[0][3]+' '+self.li[0][4]+' '+self.li[0][5])
+            l=[]
+            for i in [self.li[0][1],self.li[0][2],self.li[0][3],self.li[0][4],self.li[0][5]]:
+                if i != '':
+                    l.append(i)
+            self.l2.SetLabel("")
+            if (len(l)-1)>0:
+                for i in range(len(l)-1):
+                    self.l2.SetLabel(self.l2.GetLabel()+l[i]+"|")
+            self.l2.SetLabel(self.l2.GetLabel()+l[-1])
             self.l3.SetLabel("=")
             del(self.li[0])
             self.b.SetLabel("Weiter")
@@ -203,7 +245,15 @@ class alle_win(wx.Frame):
     def weiter(self,event):
         if self.li != []:
             self.l1.SetLabel(self.li[0][0])
-            self.l2.SetLabel(self.li[0][1]+' '+self.li[0][2]+' '+self.li[0][3]+' '+self.li[0][4]+' '+self.li[0][5])
+            l=[]
+            for i in [self.li[0][1],self.li[0][2],self.li[0][3],self.li[0][4],self.li[0][5]]:
+                if i != '':
+                    l.append(i)
+            self.l2.SetLabel("")
+            if (len(l)-1)>0:
+                for i in range(len(l)-1):
+                    self.l2.SetLabel(self.l2.GetLabel()+l[i]+"|")
+            self.l2.SetLabel(self.l2.GetLabel()+l[-1])
             del(self.li[0])
             self.b.SetLabel("Weiter")
             self.Bind(wx.EVT_BUTTON,self.weiter,self.b)
