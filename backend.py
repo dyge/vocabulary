@@ -3,7 +3,7 @@ from datetime import datetime,timedelta
 import configparser
 
 config = configparser.ConfigParser()
-config.read("/Users/sinaandreas/Desktop/MeinOrder/Meine_Projekte/Lernprogramm/myconf.ini") #/Users/sinaandreas/Desktop/Projekte/Lernprogramm/myconf.ini
+config.read("/Users/sinaandreas/Desktop/MeinOrder/Meine_Projekte/Lernprogramm/myconf.ini")
 
 def ConfigSectionMap(section):
     dict1={}
